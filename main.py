@@ -34,16 +34,16 @@ def VerifyPath(path, config_item, default_path):
 
 
 # 功能选择函数
-def FunctionSelect():
+def function_select():
 
     # 获取用户输入的功能代码
-    def GetFunctionCode():
+    def get_function_code():
         print(f'\n请选择功能:\n1# 图像分类\n2# 图像转换\n3# 图像批量重命名\n4# 退出...\n')
         while True:
             try:
                 function_select = int(input(f'请输入编号(1,2,3,4): '))
                 if function_select in {1, 2, 3, 4}:
-                    FunctionExecute(function_select)
+                    function_execute(function_select)
                     break
                 else:
                     print(f'编号不存在，请重新输入。')
@@ -52,34 +52,32 @@ def FunctionSelect():
 
 
     # 对功能选择函数进行响应
-    def FunctionExecute(function_select):
+    def function_execute(function_select):
         if function_select == 1:
-            ImageClassifier()
+            image_classifier()
         elif function_select == 2:
-            ImageConverter()
+            image_converter()
         elif function_select == 3:
-            ImageRename()
+            image_rename()
         elif function_select == 4:
-            ProgramExit('0x00')
-        else:
-            ProgramExit('0x02')
+            program_exit('0x00')
 
 
-    GetFunctionCode()
+    get_function_code()
 
 
 # 图像分类操作函数
-def ImageClassifier():
+def image_classifier():
 
     # 模式选择
-    def ModeSelect():
+    def classifier_mode_select():
 
-        print(f'\n请选择模式:\n1# 使用配置文件定义的模式\n2# AspectRatio\n3# Threshold\n4# Extension\n 5# 返回...')
+        print(f'\n请选择模式:\n1# 使用配置文件定义的模式\n2# AspectRatio\n3# Threshold\n4# FileSuffix\n 5# 返回...')
         while True:
             try:
-                mode_select = int(input(f'请输入编号(1,2,3,4): '))
-                if mode_select in {1, 2, 3, 4}:
-                    ModeExecute(mode_select)
+                mode_select = int(input(f'请输入编号(1,2,3,4,5): '))
+                if mode_select in {1, 2, 3, 4, 5}:
+                    classifier_mode_execute(mode_select)
                     break
                 else:
                     print(f'编号不存在，请重新输入。')
@@ -88,35 +86,37 @@ def ImageClassifier():
 
 
     # 对模式选择进行响应
-    def ModeExecute(mode_select):
+    def classifier_mode_execute(mode_select):
 
         if mode_select == 1:
             mode = config.get('Mode', '').strip('"')
             print(f'模式: {mode}')
             if mode == 'AspectRatio':
-                AspectRatio()
+                aspect_ratio()
             elif mode == 'Threshold':
-                Threshold()
+                threshold()
+            elif mode == 'FileSuffix':
+                file_suffix()
             else:
-                ProgramExit('0x01')
+                program_exit('0x01')
         elif mode_select == 2:
             mode = 'AspectRatio'
             print(f'模式: {mode}')
-            AspectRatio()
+            aspect_ratio()
         elif mode_select == 3:
             mode = 'Threshold'
             print(f'模式: {mode}')
-            Threshold()
+            threshold()
         elif mode_select == 4:
-            Extension()
+            mode = 'FileSuffix'
+            print(f'模式: {mode}')
+            file_suffix()
         elif mode_select == 5:
-            FunctionSelect()
-        else:
-            ProgramExit('0x02')
+            function_select()
 
 
     # 当模式为 AspectRatio 时，执行下面的函数
-    def AspectRatio():
+    def aspect_ratio():
 
         # 判断配置文件状态，没做合法性检测
         source_path = (config.get('AspectRatioSourceFolder', '').strip('"'))
@@ -196,14 +196,14 @@ def ImageClassifier():
                 print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')
 
         input('分类完成，按 Enter 继续...')
-        FunctionSelect()
+        function_select()
 
 
     # 当模式为 Threshold 时，执行下面的函数
-    def Threshold():
+    def threshold():
 
         # Threshold 模式中的纵向模式
-        def ThresholdPortrait():
+        def threshold_portrait():
 
             # 读取配置文件
             source_path = config.get('ThresholdSourceFolder', '').strip('"')
@@ -265,7 +265,7 @@ def ImageClassifier():
                         # 判断图像是否满足配置文件中设置的阈值
                         # 如果位达到任意一个最低阈值，则移动到目标文件夹
                         if portrait_minwidth is None and portrait_minheight is None:
-                            ProgramExit('0x01')
+                            program_exit('0x01')
                         elif (portrait_minwidth is None or width <= portrait_minwidth) or (portrait_minheight is None or height <= portrait_minheight):
                             shutil.move(file_path, os.path.join(target_path, filename))
                             print(f'已处理: {filename} => {target_path}')
@@ -274,11 +274,11 @@ def ImageClassifier():
                     print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')
 
             input('分类完成，按 Enter 继续...')
-            FunctionSelect()
+            function_select()
 
 
         # Threshold 模式中的横向模式
-        def ThresholdLandscape():
+        def threshold_landscape():
 
             # 读取配置文件
             source_path = config.get('ThresholdSourceFolder', '').strip('"')
@@ -340,7 +340,7 @@ def ImageClassifier():
                         # 判断图像是否满足配置文件中设置的阈值
                         # 如果位达到任意一个最低阈值，则移动到目标文件夹
                         if landscape_minwidth is None and landscape_minheight is None:
-                            ProgramExit('0x01')
+                            program_exit('0x01')
                         elif (landscape_minwidth is None or width <= landscape_minwidth) or (landscape_minheight is None or height <= landscape_minheight):
                             shutil.move(file_path, os.path.join(target_path, filename))
                             print(f'已处理: {filename} => {target_path}')
@@ -349,7 +349,7 @@ def ImageClassifier():
                     print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')
 
             input('分类完成，按 Enter 继续...')
-            FunctionSelect()
+            function_select()
 
 
         # Threshold 模式中的模式选择
@@ -362,62 +362,62 @@ def ImageClassifier():
                         print(f'模式: Threshold, Portrait')
                         time.sleep(2)
                         print(f'开始执行任务...')
-                        ThresholdPortrait()
+                        threshold_portrait()
                     elif threshold_mode_select == 2:
                         print(f'模式: Threshold, Landscape')
                         time.sleep(2)
                         print(f'开始执行任务...')
-                        ThresholdLandscape()
+                        threshold_landscape()
                     elif threshold_mode_select == 3:
-                        ModeSelect()
+                        classifier_mode_select()
                     else:
-                        ProgramExit('0x02')
+                        program_exit('0x02')
                 else:
                     print(f'编号不存在，请重新输入。')
             except ValueError:
                 print(f'输入无效，请输入数字编号。')
 
 
-    # 当模式为 Extension 时，执行下面的函数
-    def Extension():
+    # 当模式为 FileSuffix 时，执行下面的函数
+    def file_suffix():
         
         # 读取配置文件
-        source_path = config.get('ExtensionSourceFolder', '').strip('"')
+        source_path = config.get('FileSuffixSourceFolder', '').strip('"')
         if source_path == '':
-            print(f'警告: 配置文件中 "ExtensionSourceFolder" 的值为空，程序将使用默认值 "./Extension/Source"')
-            source_path = './Extension/Source'
+            print(f'警告: 配置文件中 "FileSuffixSourceFolder" 的值为空，程序将使用默认值 "./data/FileSuffix/Source"')
+            source_path = './data/FileSuffix/Source'
         else:
-            print(f'读取到配置 "ExtensionSourceFolder" 的值为 "{source_path}"')
+            print(f'读取到配置 "FileSuffixSourceFolder" 的值为 "{source_path}"')
 
 
         png_target = config.get('PNGTarget', '').strip('"')
         if png_target == '':
-            print(f'警告: 配置文件中 "PNGTarget" 的值为空，程序将使用默认值 "./Extension/PNG"')
-            png_target = './Extension/PNG'
+            print(f'警告: 配置文件中 "PNGTarget" 的值为空，程序将使用默认值 "./data/FileSuffix/PNG"')
+            png_target = './data/FileSuffix/PNG'
         else:
             print(f'读取到配置 "PNGTarget" 的值为 "{png_target}"')
             
 
         jpeg_target = config.get('JPEGTarget', '').strip('"')
         if jpeg_target == '':
-            print(f'警告: 配置文件中 "JPEGTarget" 的值为空，程序将使用默认值 "./Extension/JPEG"')
-            jpeg_target = './Extension/JPEG'
+            print(f'警告: 配置文件中 "JPEGTarget" 的值为空，程序将使用默认值 "./data/FileSuffix/JPEG"')
+            jpeg_target = './data/FileSuffix/JPEG'
         else:
             print(f'读取到配置 "JPEGTarget" 的值为 "{jpeg_target}"')
             
 
         webp_target = config.get('WebPTarget', '').strip('"')
         if webp_target == '':
-            print(f'警告: 配置文件中 "WebPTarget" 的值为空，程序将使用默认值 "./Extension/WebP"')
-            webp_target = './Extension/WebP'
+            print(f'警告: 配置文件中 "WebPTarget" 的值为空，程序将使用默认值 "./data/FileSuffix/WebP"')
+            webp_target = './data/FileSuffix/WebP'
         else:
             print(f'读取到配置 "WebPTarget" 的值为 "{webp_target}"')
             
 
         bmp_target = config.get('BMPTarget', '').strip('"')
         if bmp_target == '':
-            print(f'警告: 配置文件中 "BMPTarget" 的值为空，程序将使用默认值 "./Extension/BMP"')
-            bmp_target = './Extension/BMP'
+            print(f'警告: 配置文件中 "BMPTarget" 的值为空，程序将使用默认值 "./data/FileSuffix/BMP"')
+            bmp_target = './data/FileSuffix/BMP'
         else:
             print(f'读取到配置 "BMPTarget" 的值为 "{bmp_target}"')
 
@@ -458,35 +458,35 @@ def ImageClassifier():
                 print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')
 
             input('分类完成，按 Enter 继续...')
-            FunctionSelect()
+            function_select()
         
 
     # 加载功能 Classifier 的配置文件 => variable = config
-    CONFIG_PATH = './Classifier.yaml'
-    with open(CONFIG_PATH, 'r', encoding='utf-8') as file:
+    config_path = './Classifier.yaml'
+    with open(config_path, 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
 
 
-    ModeSelect()
+    function_select()
 
 
 # 图像格式转换操作函数
-def ImageConverter():
+def image_converter():
 
     # 格式选择
-    def FormatSelect():
+    def converter_format_select():
 
         # 获取源文件格式选择
-        def SourceFormatSelect():
-            print(f'\n请选择源文件格式:\n1# PNG\n2# JP(E)G\n3# WebP\n4# 返回...\n')
+        def source_format_select():
+            print(f'\n请选择源文件格式:\n1# PNG\n2# JP(E)G\n3# WebP\n4# BMP\n5# 返回...\n')
             while True:
                 try:
-                    source_format_select = int(input(f'请输入编号(1,2,3,4):'))
-                    if source_format_select in {1, 2, 3, 4}:
-                        if source_format_select == 4:
-                            FunctionSelect()
+                    source_format_num = int(input(f'请输入编号(1,2,3,4,5):'))
+                    if source_format_num in {1, 2, 3, 4, 5}:
+                        if source_format_num == 5:
+                            function_select()
                         else:
-                            TargetFormatSelect(source_format_select)
+                            target_format_select(source_format_num)
                             break
                     else:
                         print(f'编号不存在，请重新输入。')
@@ -495,18 +495,16 @@ def ImageConverter():
 
 
         # 获取目标格式文件选择
-        def TargetFormatSelect(source_format_select):
-            source_format = source_format_select
-            print(f'\n请选择目标文件格式:\n1# PNG\n2# JPG\n3# WebP\n4# 返回...\n')
+        def target_format_select(source_format_num):
+            print(f'\n请选择目标文件格式:\n1# PNG\n2# JPG\n3# WebP\n4# BMP\n5# 返回...\n')
             while True:
                 try:
-                    target_format_select = int(input(f'请输入编号(1,2,3,4):'))
-                    if target_format_select in {1, 2, 3, 4}:
-                        if target_format_select == 4:
-                            SourceFormatSelect()
+                    target_format_num = int(input(f'请输入编号(1,2,3,4,5):'))
+                    if target_format_num in {1, 2, 3, 4, 5}:
+                        if target_format_num == 5:
+                            source_format_select()
                         else:
-                            target_format = target_format_select
-                            FormatExecute(source_format, target_format)
+                            format_execute(source_format_num, target_format_num)
                             break
                     else:
                         print(f'编号不存在，请重新输入。')
@@ -515,35 +513,52 @@ def ImageConverter():
 
 
         # 对格式选择进行响应
-        def FormatExecute(source_format, target_format):
+        def format_execute(source_format, target_format):
 
             # 防止源文件和目标文件格式相同
             if source_format == target_format:
                 print(f'警告：源文件格式不能与目标文件格式相同，请重新选择...')
-                FormatSelect()
-            
-            print('占个位')
+                source_format_select()
+            else:
+                print('占位')
 
 
-        SourceFormatSelect()
+
+        source_format_select()
 
 
     # 加载功能 Converter 的配置文件
-    CONFIG_PATH = './config/Converter.yaml'
-    with open(CONFIG_PATH, 'r', encoding='utf-8') as file:
+    config_path = './config/Converter.yaml'
+    with open(config_path, 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
 
 
-    FormatSelect()
+    p2j_quality = int(config.get('P2J_Quality', '').strip('"'))
+    if p2j_quality == '':
+        print(f'警告: 配置文件中 "P2J_Quality" 的值为空，程序将使用默认值 "80"')
+        p2j_quality = int('80')
+    else:
+        print(f'读取到配置 "BMPTarget" 的值为 "{p2j_quality}"')
+
+
+    p2w_quality = int(config.get('P2W_Quality', '').strip('"'))
+    if p2w_quality == '':
+        print(f'警告: 配置文件中 "P2W_Quality" 的值为空，程序将使用默认值 "80"')
+        p2w_quality = int('80')
+    else:
+        print(f'读取到配置 "BMPTarget" 的值为 "{p2w_quality}"')
+
+
+    converter_format_select()
 
 
 # 图像重命名操作函数
-def ImageRename():
+def image_rename():
 
 
     # 加载功能 Rename 的配置文件
-    CONFIG_PATH = './config/Rename.yaml'
-    with open(CONFIG_PATH, 'r', encoding='utf-8') as file:
+    config_path = './config/Rename.yaml'
+    with open(config_path, 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
 
 
@@ -562,8 +577,10 @@ def ImageRename():
     else:
         print(f'读取到配置 "RenameTargetFolder" 的值为 "{target_path}"')
 
+
     # 暂停三秒，查看配置文件读取信(bao)息(cuo)
     time.sleep(3)
+
 
     os.makedirs(source_path, exist_ok=True)
     os.makedirs(target_path, exist_ok=True)
@@ -587,11 +604,11 @@ def ImageRename():
 
         
     input('重命名完成，按 Enter 继续...')
-    FunctionSelect()
+    function_select()
 
 
 # 程序终止函数
-def ProgramExit(exitcode):
+def program_exit(exitcode):
     
     if exitcode == '0x00':
         print('侦测到停止命令，程序正常结束')
@@ -600,15 +617,15 @@ def ProgramExit(exitcode):
     elif exitcode == '0x02':
         print('程序因未知原因中断')
     else:
-        ProgramExit('0x02')
+        program_exit('0x02')
 
     input('程序终止，按 Enter 退出...')
     exit()
 
 
-# 侦测强行中断操作，如果按下 ^C，将事件直接传递到 ProgramExit() 函数
+# 侦测强行中断操作，如果按下 ^C，将事件直接传递到 program_exit() 函数
 try:
-    FunctionSelect()
+    function_select()
 except KeyboardInterrupt:
     print('侦测到 ^C 输入，强制中止程序...')
-    ProgramExit('0x00')
+    program_exit('0x00')

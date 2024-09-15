@@ -58,20 +58,20 @@ TargetFolder: "./Threshold/Target"
 
 
 ###########################
-## Extension 模式配置文件 ##
+## FileSuffix 模式配置文件 ##
 ###########################
 
 # Extension 模式的源文件夹
-ExtensionSourceFolder: "./Extension/Source"
+FileSuffixSourceFolder: "./data/FileSuffix/Source"
 
 # PNG 目标文件夹
-PNGTarget: "./Extension/PNG"
+PNGTarget: "./data/FileSuffix/PNG"
 
 # JP(E)G 目标文件夹
-JPGTarget: "./Extension/JPG"
+JPGTarget: "./data/FileSuffix/JPEG"
 
 # WebP 目标文件夹
-WebPTarget: "./Extension/WebP"
+WebPTarget: "./data/FileSuffix/WebP"
 
 # BMP 目标文件夹
-BMPTarget: "./Extension/BMP"
+BMPTarget: "./data/FileSuffix/BMP"
