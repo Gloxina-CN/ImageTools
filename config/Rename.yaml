@@ -1,0 +1,12 @@
+##############################
+## Image Rename Tool Config ##
+##############################
+
+# 重命名功能的源文件夹
+RenameSourceFolder: './data/Rename/Source'
+
+# 重命名功能的目标文件夹
+RenameTargetFolder: './data/Rename/Renamed'
+
+# 在使用 UUID 进行随机文件名重命名时，是否去除 UUID 中的连字符('-')
+UUIDRemoveHyphen: 'true'
