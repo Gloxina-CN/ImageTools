@@ -72,7 +72,7 @@ def image_classifier():
     # 模式选择
     def classifier_mode_select():
 
-        print(f'\n请选择模式:\n1# 使用配置文件定义的模式\n2# AspectRatio\n3# Threshold\n4# FileSuffix\n 5# 返回...')
+        print(f'\n请选择模式:\n1# 使用配置文件定义的模式\n2# AspectRatio\n3# Threshold\n4# FileSuffix\n5# 返回...\n')
         while True:
             try:
                 mode_select = int(input(f'请输入编号(1,2,3,4,5): '))
@@ -457,17 +457,17 @@ def image_classifier():
             except (IOError, OSError) as error:
                 print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')
 
-            input('分类完成，按 Enter 继续...')
-            function_select()
+        input('分类完成，按 Enter 继续...')
+        function_select()
         
 
     # 加载功能 Classifier 的配置文件 => variable = config
-    config_path = './Classifier.yaml'
+    config_path = './config/classifier.yaml'
     with open(config_path, 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
 
 
-    function_select()
+    classifier_mode_select()
 
 
 # 图像格式转换操作函数
@@ -528,7 +528,7 @@ def image_converter():
 
 
     # 加载功能 Converter 的配置文件
-    config_path = './config/Converter.yaml'
+    config_path = './config/converter.yaml'
     with open(config_path, 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
 
@@ -557,7 +557,7 @@ def image_rename():
 
 
     # 加载功能 Rename 的配置文件
-    config_path = './config/Rename.yaml'
+    config_path = './config/rename.yaml'
     with open(config_path, 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
 

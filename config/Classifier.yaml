@@ -17,16 +17,16 @@ Delay: "0.05"
 #############################
 
 # AspectRatioSourceFolder：AspectRatio 模式的源文件夹
-AspectRatioSourceFolder: "./AspectRatio/Source"
+AspectRatioSourceFolder: "./data/Classifier/AspectRatio/Source"
 
 # LandscapeFolder：当图片被判断为横向图片时，输出的目标文件夹
-LandscapeFolder: "./AspectRatio/Landscape"
+LandscapeFolder: "./data/Classifier/AspectRatio/Landscape"
 
 # PortraitFolder：当图片被判断为纵向图片时，输出的目标文件夹
-PortraitFolder: "./AspectRatio/Portrait"
+PortraitFolder: "./data/Classifier/AspectRatio/Portrait"
 
 # OtherFolder：当图片既不是横向也不是纵向时，输出的目标文件夹
-OtherFolder: "./AspectRatio/Other"
+OtherFolder: "./data/Classifier/AspectRatio/Other"
 
 # W2H_Threshold：判断图片横纵的阈值，默认为 1.2
 W2H_Threshold: "1.2"
@@ -38,7 +38,7 @@ W2H_Threshold: "1.2"
 ###########################
 
 # Threshold 模式的源文件夹
-ThresholdSourceFolder: "./Threshold/Source"
+ThresholdSourceFolder: "./data/Threshold/Source"
 
 # PortraitMinWidth：纵向图片的最小宽度阈值，若低于此值，则移动到 Destination 文件夹(单位 pixel)
 PortraitMinWidth: "1080"
@@ -53,7 +53,7 @@ LandscapeMinWidth: "2560"
 LandscapeMinHeight: "1440"
 
 # TargetFolder：移动的目标文件夹
-TargetFolder: "./Threshold/Target"
+TargetFolder: "./data/Threshold/Target"
 
 
 
@@ -68,7 +68,7 @@ FileSuffixSourceFolder: "./data/FileSuffix/Source"
 PNGTarget: "./data/FileSuffix/PNG"
 
 # JP(E)G 目标文件夹
-JPGTarget: "./data/FileSuffix/JPEG"
+JPEGTarget: "./data/FileSuffix/JPEG"
 
 # WebP 目标文件夹
 WebPTarget: "./data/FileSuffix/WebP"
