@@ -3,7 +3,6 @@
 # Pillow Docs 地址: https://pillow.readthedocs.io/en/stable/reference
 
 
-# import 第三方库
 import os
 import time
 import yaml
@@ -39,11 +38,11 @@ def FunctionSelect():
 
     # 获取用户输入的功能代码
     def GetFunctionCode():
-        print(f'\n请选择功能:\n1# 图像分类\n2# 图像转换\n3# 退出...\n')
+        print(f'\n请选择功能:\n1# 图像分类\n2# 图像转换\n3# 图像批量重命名\n4# 退出...\n')
         while True:
             try:
-                function_select = int(input(f'请输入编号(1,2,3): '))
-                if function_select in {1, 2, 3}:
+                function_select = int(input(f'请输入编号(1,2,3,4): '))
+                if function_select in {1, 2, 3, 4}:
                     FunctionExecute(function_select)
                     break
                 else:
@@ -59,6 +58,8 @@ def FunctionSelect():
         elif function_select == 2:
             ImageConverter()
         elif function_select == 3:
+            ImageRename()
+        elif function_select == 4:
             ProgramExit('0x00')
         else:
             ProgramExit('0x02')
@@ -420,7 +421,7 @@ def ImageClassifier():
         else:
             print(f'读取到配置 "BMPTarget" 的值为 "{bmp_target}"')
 
-
+        # 暂停三秒，查看配置文件读取信(bao)息(cuo)
         time.sleep(3)
 
         os.makedirs(source_path, exist_ok=True)
@@ -561,6 +562,8 @@ def ImageRename():
     else:
         print(f'读取到配置 "RenameTargetFolder" 的值为 "{target_path}"')
 
+    # 暂停三秒，查看配置文件读取信(bao)息(cuo)
+    time.sleep(3)
 
     os.makedirs(source_path, exist_ok=True)
     os.makedirs(target_path, exist_ok=True)
@@ -581,6 +584,10 @@ def ImageRename():
         
         except (IOError, OSError) as error:
             print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')
+
+        
+    input('重命名完成，按 Enter 继续...')
+    FunctionSelect()
 
 
 # 程序终止函数
