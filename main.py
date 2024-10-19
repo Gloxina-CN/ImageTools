@@ -12,6 +12,7 @@ import warnings
 from PIL import Image
 
 
+
 # 用于检查路径是否合法的库，还没用上
 # from pathvalidate import is_valid_filepath
 
@@ -473,38 +474,22 @@ def image_classifier():
 # 图像格式转换操作函数
 def image_converter():
 
+
     # 格式选择
     def converter_format_select():
 
-        # 获取源文件格式选择
-        def source_format_select():
-            print(f'\n请选择源文件格式:\n1# PNG\n2# JP(E)G\n3# WebP\n4# BMP\n5# 返回...\n')
-            while True:
-                try:
-                    source_format_num = int(input(f'请输入编号(1,2,3,4,5):'))
-                    if source_format_num in {1, 2, 3, 4, 5}:
-                        if source_format_num == 5:
-                            function_select()
-                        else:
-                            target_format_select(source_format_num)
-                            break
-                    else:
-                        print(f'编号不存在，请重新输入。')
-                except ValueError:
-                    print(f'输入无效，请输入数字编号。')
-
 
         # 获取目标格式文件选择
-        def target_format_select(source_format_num):
+        def target_format_select():
             print(f'\n请选择目标文件格式:\n1# PNG\n2# JPG\n3# WebP\n4# BMP\n5# 返回...\n')
             while True:
                 try:
                     target_format_num = int(input(f'请输入编号(1,2,3,4,5):'))
                     if target_format_num in {1, 2, 3, 4, 5}:
                         if target_format_num == 5:
-                            source_format_select()
+                            function_select()
                         else:
-                            format_execute(source_format_num, target_format_num)
+                            format_execute(target_format_num)
                             break
                     else:
                         print(f'编号不存在，请重新输入。')
@@ -513,18 +498,12 @@ def image_converter():
 
 
         # 对格式选择进行响应
-        def format_execute(source_format, target_format):
+        def format_execute(target_format):
+            '''
+            遍历 S
+            '''
 
-            # 防止源文件和目标文件格式相同
-            if source_format == target_format:
-                print(f'警告：源文件格式不能与目标文件格式相同，请重新选择...')
-                source_format_select()
-            else:
-                print('占位')
-
-
-
-        source_format_select()
+        target_format_select()
 
 
     # 加载功能 Converter 的配置文件
@@ -538,7 +517,7 @@ def image_converter():
         print(f'警告: 配置文件中 "P2J_Quality" 的值为空，程序将使用默认值 "80"')
         p2j_quality = int('80')
     else:
-        print(f'读取到配置 "BMPTarget" 的值为 "{p2j_quality}"')
+        print(f'读取到配置 "P2J_Quality" 的值为 "{p2j_quality}"')
 
 
     p2w_quality = int(config.get('P2W_Quality', '').strip('"'))
@@ -546,7 +525,7 @@ def image_converter():
         print(f'警告: 配置文件中 "P2W_Quality" 的值为空，程序将使用默认值 "80"')
         p2w_quality = int('80')
     else:
-        print(f'读取到配置 "BMPTarget" 的值为 "{p2w_quality}"')
+        print(f'读取到配置 "P2W_Quality" 的值为 "{p2w_quality}"')
 
 
     converter_format_select()
