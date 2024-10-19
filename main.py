@@ -2,7 +2,7 @@
 # 图像信息读取使用 Pillow
 # Pillow Docs 地址: https://pillow.readthedocs.io/en/stable/reference
 
-
+# 导入第三方库
 import os
 import time
 import yaml
@@ -11,6 +11,7 @@ import shutil
 import warnings
 from PIL import Image
 
+# 导入自己写的其他 Python 脚本
 
 
 # 用于检查路径是否合法的库，还没用上
@@ -498,9 +499,17 @@ def image_converter():
 
 
         # 对格式选择进行响应
-        def format_execute(target_format):
+        def format_execute(target_format_num):
             '''
-            遍历 S
+            遍历 Source 文件夹下的所有文件并且标识为变量 source_file
+            如果后缀为 png，source_file = 1
+            如果后缀为 jpg/jpeg，source_file = 2
+            如果后缀为 webp，source_file = 3
+            如果后缀为 bmp，source_file = 4
+            如果不是以上任何一种，print('此程序不支持该文件格式，跳过 {文件变量名称}')
+            如果 source_file == target_format_num，跳过该文件
+            
+            开始转换
             '''
 
         target_format_select()
@@ -567,7 +576,9 @@ def image_rename():
 
     # 遍历 Source 文件夹下的所有图片
     for filename in os.listdir(source_path):
+
         time.sleep(0.05)
+
         try:
             if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.bmp')):
                 new_filename = str(uuid.uuid4()).replace('-', '') + os.path.splitext(filename)[1]
@@ -589,6 +600,7 @@ def image_rename():
 # 程序终止函数
 def program_exit(exitcode):
     
+
     if exitcode == '0x00':
         print('侦测到停止命令，程序正常结束')
     elif exitcode == '0x01':
