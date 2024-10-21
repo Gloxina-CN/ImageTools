@@ -2,6 +2,12 @@
 ## Image Converter Config ##
 ############################
 
+# 源文件夹
+SourceFolder: './Converter/Source'
+
+# 目标文件夹
+TargetFolder: './Converter/Target'
+
 # PNG 转 JPG 的质量，范围 0 => 100（默认为 80）
 # 数值越高，图像质量越高，体积越大
 P2J_Quality: '100'

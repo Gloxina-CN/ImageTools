@@ -485,12 +485,12 @@ def image_converter():
             print(f'\n请选择目标文件格式:\n1# PNG\n2# JP(E)G\n3# WebP\n4# BMP\n5# 返回...\n')
             while True:
                 try:
-                    target_format_num = int(input(f'请输入编号(1,2,3,4,5):'))
-                    if target_format_num in {1, 2, 3, 4, 5}:
-                        if target_format_num == 5:
+                    target_format_select = int(input(f'请输入编号(1,2,3,4,5):'))
+                    if target_format_select in {1, 2, 3, 4, 5}:
+                        if target_format_select == 5:
                             function_select()
                         else:
-                            format_execute(target_format_num)
+                            format_execute(target_format_select)
                             break
                     else:
                         print(f'编号不存在，请重新输入。')
@@ -498,19 +498,88 @@ def image_converter():
                     print(f'输入无效，请输入数字编号。')
 
 
-        # 对格式选择进行响应
-        def format_execute(target_format_num):
-            if target_format_num == 1:
-                target_format = 'PNG'
-            elif target_format_num == 2:
-                target_format = 'JPG'
-            elif target_format_num == 3:
-                target_format = 'WEBP'
-            elif target_format_num == 4:
-                target_format = 'BMP'
+        # 执行操作
+        def format_execute(target_format_select):
 
 
-            img = 
+            # 加载配置文件
+            source_path = config.get('SourceFolder', ''.strip('"'))
+            if source_path == '':
+                print(f'警告: 配置文件中 "SourceFolder" 的值为空，程序将使用默认值 "./Converter/Source"')
+                source_path = './Converter/Source'
+            else:
+                print(f'读取到配置 "SourceFolder" 的值为 "{source_path}"')
+
+
+            target_path = config.get('TargetFolder', ''.strip('"'))
+            if target_path == '':
+                print(f'警告: 配置文件中 "TargetFolder" 的值为空，程序将使用默认值 "./Converter/Target"')
+                target_path = './Converter/Target'
+            else:
+                print(f'读取到配置 "TargetFolder" 的值为 "{target_path}"')
+
+
+            p2j_quality = int(config.get('P2J_Quality', '').strip('"'))
+            if p2j_quality == '':
+                print(f'警告: 配置文件中 "P2J_Quality" 的值为空，程序将使用默认值 "80"')
+                p2j_quality = int('80')
+            else:
+                print(f'读取到配置 "P2J_Quality" 的值为 "{p2j_quality}"')
+
+
+            p2w_quality = int(config.get('P2W_Quality', '').strip('"'))
+            if p2w_quality == '':
+                print(f'警告: 配置文件中 "P2W_Quality" 的值为空，程序将使用默认值 "80"')
+                p2w_quality = int('80')
+            else:
+                print(f'读取到配置 "P2W_Quality" 的值为 "{p2w_quality}"')
+
+            
+            delete_previous = config.get('DeletePrevious', ''.strip(''))
+            if delete_previous == '':
+                print(f'警告: 配置文件中 "DeletePrevious" 未配置，程序将使用默认值 "false"')
+                delete_previous = 'false'
+            elif delete_previous == 'false':
+                print(f'读取到配置 "DeletePrevious 的值为 "false"')
+            elif delete_previous == 'true':
+                print(f'读取到配置 "DeletePrevious 的值为 "true"')
+            else:
+                print(f'警告: 配置文件中 "DeletePrevious" 配置错误，程序将使用默认值 "false"')
+                delete_previous = 'false'
+            
+
+            for filename in os.listdir(source_path):
+                try:
+                    if filename.lower().endswith('.png', '.jpg', '.jpeg', '.webp', '.bmp'):
+                        uuidname = str(uuid.uuid4()).replace('-', '') + os.path.splitext(filename)[1]
+                        if target_format_select == 1:
+                            target_format = 'PNG'
+                            ext = 'png'
+                        elif target_format_select == 2:
+                            target_format = 'JPG'
+                            ext = 'jpg'
+                        elif target_format_select == 3:
+                            target_format = 'WEBP'
+                            ext = 'webp'
+                        elif target_format_select == 4:
+                            target_format = 'BMP'
+                            ext = 'bmp'
+
+
+                        img = Image.open(f'{filename}')
+                        img.save(f'{uuidname}.{ext}', f'{target_format}')
+
+                        if delete_previous == 'true':
+                            os.remove(f'{filename}')
+
+                        print(f'已处理: {uuidname}.{ext} => ')
+
+
+                except (IOError, OSError) as error:
+                    print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')
+
+
+                
             '''
             遍历 Source 文件夹下的所有文件并且标识为变量 source_file
             如果后缀为 png，source_file = 1
@@ -518,9 +587,9 @@ def image_converter():
             如果后缀为 webp，source_file = 3
             如果后缀为 bmp，source_file = 4
             如果不是以上任何一种，print('此程序不支持该文件格式，跳过 {文件变量名称}')
-            如果 source_file == target_format_num，跳过该文件
+            如果 source_file == target_format_select，跳过该文件
             
-            将 source_file != target_format_num 的文件通过 Pillow 进行转换
+            将 source_file != target_format_select 的文件通过 Pillow 进行转换
 
             # 转换操作
             from PIL import Image
@@ -535,8 +604,8 @@ def image_converter():
                         
                     if filename.lower().endswith(('.png')):
                         file_path = os.path.join(source_path, filename)
-                        shutil.move(file_path, os.path.join(target_folder, filename))
-                        print(f'已处理: {filename} => {target_folder}')
+                        shutil.move(file_path, os.path.join(target_path, filename))
+                        print(f'已处理: {filename} => {target_path}')
 
 
             except (IOError, OSError) as error:
@@ -550,22 +619,6 @@ def image_converter():
     config_path = './config/converter.yaml'
     with open(config_path, 'r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
-
-
-    p2j_quality = int(config.get('P2J_Quality', '').strip('"'))
-    if p2j_quality == '':
-        print(f'警告: 配置文件中 "P2J_Quality" 的值为空，程序将使用默认值 "80"')
-        p2j_quality = int('80')
-    else:
-        print(f'读取到配置 "P2J_Quality" 的值为 "{p2j_quality}"')
-
-
-    p2w_quality = int(config.get('P2W_Quality', '').strip('"'))
-    if p2w_quality == '':
-        print(f'警告: 配置文件中 "P2W_Quality" 的值为空，程序将使用默认值 "80"')
-        p2w_quality = int('80')
-    else:
-        print(f'读取到配置 "P2W_Quality" 的值为 "{p2w_quality}"')
 
 
     converter_format_select()
