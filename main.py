@@ -482,7 +482,7 @@ def image_converter():
 
         # 获取目标格式文件选择
         def target_format_select():
-            print(f'\n请选择目标文件格式:\n1# PNG\n2# JPG\n3# WebP\n4# BMP\n5# 返回...\n')
+            print(f'\n请选择目标文件格式:\n1# PNG\n2# JP(E)G\n3# WebP\n4# BMP\n5# 返回...\n')
             while True:
                 try:
                     target_format_num = int(input(f'请输入编号(1,2,3,4,5):'))
@@ -500,6 +500,17 @@ def image_converter():
 
         # 对格式选择进行响应
         def format_execute(target_format_num):
+            if target_format_num == 1:
+                target_format = 'PNG'
+            elif target_format_num == 2:
+                target_format = 'JPG'
+            elif target_format_num == 3:
+                target_format = 'WEBP'
+            elif target_format_num == 4:
+                target_format = 'BMP'
+
+
+            img = 
             '''
             遍历 Source 文件夹下的所有文件并且标识为变量 source_file
             如果后缀为 png，source_file = 1
@@ -509,7 +520,27 @@ def image_converter():
             如果不是以上任何一种，print('此程序不支持该文件格式，跳过 {文件变量名称}')
             如果 source_file == target_format_num，跳过该文件
             
-            开始转换
+            将 source_file != target_format_num 的文件通过 Pillow 进行转换
+
+            # 转换操作
+            from PIL import Image
+            img = Image.open('input.jpg')
+            img.save('output.png', 'PNG')
+
+
+            ### 开始转换 ###
+            for filename in os.listdir(source_path):
+            try:
+                if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.bmp')):
+                        
+                    if filename.lower().endswith(('.png')):
+                        file_path = os.path.join(source_path, filename)
+                        shutil.move(file_path, os.path.join(target_folder, filename))
+                        print(f'已处理: {filename} => {target_folder}')
+
+
+            except (IOError, OSError) as error:
+                print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')
             '''
 
         target_format_select()
