@@ -4,6 +4,7 @@
 
 # 导入第三方库
 import os
+import re
 import time
 import yaml
 import uuid
@@ -650,10 +651,27 @@ def image_rename():
         print(f'读取到配置 "RenameTargetFolder" 的值为 "{target_path}"')
 
 
-    # 暂停三秒，查看配置文件读取信(bao)息(cuo)
+    # 在使用 UUID 进行随机文件名重命名时，是否去除 UUID 中的连字符('-') [true/false]
+    rename_func_1 = config.get('UUIDRemoveHyphen', '').strip('"')
+    if rename_func_1 in ('true', 'false'):
+        print(f'读取到配置 "UUIDRemoveHyphen" 的值为 "{rename_func_1}"')
+    else:
+        print(f'警告: 配置文件中 "UUIDRemoveHyphen" 项配置错误，程序将使用默认值 "true")')
+        rename_func_1 = 'true'
+
+
+    # 是否跳过格式已经为 UUID 格式的文件名 [true/false]
+    rename_func_2 = config.get('SkipExistUUIDName', '').strip('"')
+    if rename_func_2 in ('true', 'false'):
+        print(f'读取到配置 "SkipExistUUIDName" 的值为 "{rename_func_2}"')
+    else:
+        print(f'警告: 配置文件中 "SkipExistUUIDName" 项配置错误，程序将使用默认值 "true")')
+        rename_func_2 = 'true'
+
+
     time.sleep(3)
 
-
+    # 如果目录不存在就创建
     os.makedirs(source_path, exist_ok=True)
     os.makedirs(target_path, exist_ok=True)
 
@@ -665,13 +683,37 @@ def image_rename():
 
         try:
             if filename.lower().endswith(('.jpg', '.jpeg', '.png', '.webp', '.bmp')):
-                new_filename = str(uuid.uuid4()).replace('-', '') + os.path.splitext(filename)[1]
-                source_file = os.path.join(source_path, filename)
-                target_file = os.path.join(target_path, new_filename)
+                
+                
+                # 判断去除扩展名的文件名是否是 UUID 的格式
+                if rename_func_2 == 'true':
 
-                shutil.move(source_file, target_file)
+                    # 获取去除扩展名的文件名
+                    realname, _ = os.path.splitext(filename)
+                    if re.fullmatch(r'[a-fA-F0-9]{32}', realname):
+                        print(f'文件名已符合 UUIDv4 格式，跳过此文件: {filename}')
+                        continue
 
-                print(f'已处理: {filename} => {new_filename}')
+                # 处理部分
+                # 1.UUIDRemoveHyphen = false
+                if rename_func_1 == 'false':
+                    new_filename = str(uuid.uuid4()) + os.path.splitext(filename)[1]
+                    source_file = os.path.join(source_path, filename)
+                    target_file = os.path.join(target_path, new_filename)
+
+                    shutil.move(source_file, target_file)
+
+                    print(f'已处理: {filename} => {new_filename}')
+
+                # 2.UUIDRemoveHyphen = true
+                elif rename_func_1 == 'true':
+                    new_filename = str(uuid.uuid4()).replace('-', '') + os.path.splitext(filename)[1]
+                    source_file = os.path.join(source_path, filename)
+                    target_file = os.path.join(target_path, new_filename)
+
+                    shutil.move(source_file, target_file)
+
+                    print(f'已处理: {filename} => {new_filename}')
         
         except (IOError, OSError) as error:
             print(f'{filename} 不是常见的图像格式，程序可能无法识别，跳过此文件: {error}')

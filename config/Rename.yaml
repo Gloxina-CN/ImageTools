@@ -8,5 +8,8 @@ RenameSourceFolder: './data/Rename/Source'
 # 重命名功能的目标文件夹
 RenameTargetFolder: './data/Rename/Renamed'
 
-# 在使用 UUID 进行随机文件名重命名时，是否去除 UUID 中的连字符('-')
+# 在使用 UUID 进行随机文件名重命名时，是否去除 UUID 中的连字符('-') [true/false]
 UUIDRemoveHyphen: 'true'
+
+# 是否跳过格式已经为 UUID 格式的文件名 [true/false]
+SkipExistUUIDName: 'true'
